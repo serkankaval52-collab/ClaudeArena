@@ -1,0 +1,15 @@
+{
+    "play_button": "SPIELEN",
+    "score_label": "SCORE",
+    "near_miss": "SO NAHE!",
+    "revive_offer": "Werbung ansehen?",
+    "menu_title": "HAUPTMENÜ",
+    "settings_button": "EINSTELLUNGEN",
+    "pause_button": "PAUSE",
+    "retry_button": "WIEDERHOLEN",
+    "game_over_label": "SPIEL VORBEI",
+    "quit_button": "BEENDEN",
+    "consent_description": "Ihre Privatsphäre ist uns wichtig. Bitte stimmen Sie personalisierter Werbung zu.",
+    "consent_accept": "AKZEPTIEREN",
+    "consent_decline": "ABLEHNEN"
+}

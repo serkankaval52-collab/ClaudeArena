@@ -1,0 +1,15 @@
+{
+    "play_button": "プレイ",
+    "score_label": "スコア",
+    "near_miss": "おしい！",
+    "revive_offer": "動画を見てリトライ？",
+    "menu_title": "メインメニュー",
+    "settings_button": "設定",
+    "pause_button": "一時停止",
+    "retry_button": "もう一度",
+    "game_over_label": "ゲームオーバー",
+    "quit_button": "終了",
+    "consent_description": "プライバシーを重視しています。パーソナライズ広告にご同意ください。",
+    "consent_accept": "同意する",
+    "consent_decline": "拒否する"
+}

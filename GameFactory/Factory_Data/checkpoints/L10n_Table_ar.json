@@ -1,0 +1,15 @@
+{
+    "play_button": "تشغيل",
+    "score_label": "النتيجة",
+    "near_miss": "لقد كنت قريبا!",
+    "revive_offer": "مشاهدة إعلان للمتابعة؟",
+    "menu_title": "القائمة الرئيسية",
+    "settings_button": "الإعدادات",
+    "pause_button": "إيقاف مؤقت",
+    "retry_button": "إعادة المحاولة",
+    "game_over_label": "لقد خسرت",
+    "quit_button": "خروج",
+    "consent_description": "نحن نهتم بخصوصيتك. يرجى الموافقة على الإعلانات المخصصة.",
+    "consent_accept": "موافق",
+    "consent_decline": "رفض"
+}

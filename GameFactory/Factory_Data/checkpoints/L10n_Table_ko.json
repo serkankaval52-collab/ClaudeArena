@@ -1,0 +1,15 @@
+{
+    "play_button": "플레이",
+    "score_label": "점수",
+    "near_miss": "아깝다!",
+    "revive_offer": "광고 보고 이어하기?",
+    "menu_title": "메인 메뉴",
+    "settings_button": "설정",
+    "pause_button": "일시 정지",
+    "retry_button": "다시 시도",
+    "game_over_label": "게임 오버",
+    "quit_button": "종료",
+    "consent_description": "개인정보를 소중히 여깁니다. 맞춤형 광고 표시를 동의해주세요.",
+    "consent_accept": "동의함",
+    "consent_decline": "거부함"
+}

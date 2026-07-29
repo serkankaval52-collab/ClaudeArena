@@ -1,0 +1,15 @@
+{
+    "play_button": "JUGAR",
+    "score_label": "PUNTUACIÓN",
+    "near_miss": "¡CASI!",
+    "revive_offer": "Ver anuncio?",
+    "menu_title": "MENÚ PRINCIPAL",
+    "settings_button": "AJUSTES",
+    "pause_button": "PAUSA",
+    "retry_button": "REINTENTAR",
+    "game_over_label": "FIN DE JUEGO",
+    "quit_button": "SALIR",
+    "consent_description": "Nos importa tu privacidad. Por favor acepta la publicidad personalizada.",
+    "consent_accept": "ACEPTAR",
+    "consent_decline": "RECHAZAR"
+}

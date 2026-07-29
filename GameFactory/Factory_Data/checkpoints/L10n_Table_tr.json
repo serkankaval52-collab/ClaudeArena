@@ -1,0 +1,15 @@
+{
+    "play_button": "OYNA",
+    "score_label": "SKOR",
+    "near_miss": "ÇOK YAKIN!",
+    "revive_offer": "Reklam İzleyip Devam?",
+    "menu_title": "ANA MENÜ",
+    "settings_button": "AYARLAR",
+    "pause_button": "DURAKLAT",
+    "retry_button": "YENİDEN DENE",
+    "game_over_label": "OYUN BİTTİ",
+    "quit_button": "ÇIKIŞ",
+    "consent_description": "Gizliliğinize önem veriyoruz. Lütfen kişiselleştirilmiş reklamları onaylayın.",
+    "consent_accept": "KABUL ET",
+    "consent_decline": "REDDET"
+}

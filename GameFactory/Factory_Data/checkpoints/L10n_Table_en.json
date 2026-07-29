@@ -1,0 +1,15 @@
+{
+    "play_button": "PLAY",
+    "score_label": "SCORE",
+    "near_miss": "SO CLOSE!",
+    "revive_offer": "Watch Ad to Continue?",
+    "menu_title": "MAIN MENU",
+    "settings_button": "SETTINGS",
+    "pause_button": "PAUSE",
+    "retry_button": "RETRY",
+    "game_over_label": "GAME OVER",
+    "quit_button": "QUIT",
+    "consent_description": "We care about your privacy. Please consent to personalized advertising.",
+    "consent_accept": "ACCEPT",
+    "consent_decline": "DECLINE"
+}

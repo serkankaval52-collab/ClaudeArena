@@ -1,0 +1,15 @@
+{
+    "play_button": "开始",
+    "score_label": "得分",
+    "near_miss": "太可惜了！",
+    "revive_offer": "观看广告继续？",
+    "menu_title": "主菜单",
+    "settings_button": "设置",
+    "pause_button": "暂停",
+    "retry_button": "重试",
+    "game_over_label": "游戏结束",
+    "quit_button": "退出",
+    "consent_description": "我们重视您的隐私。请同意个性化广告以继续。",
+    "consent_accept": "同意",
+    "consent_decline": "拒绝"
+}
