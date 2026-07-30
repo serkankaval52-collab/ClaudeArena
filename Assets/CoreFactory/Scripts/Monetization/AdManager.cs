@@ -261,6 +261,18 @@ namespace CoreFactory.Monetization
         private void OnRewardedAdHidden(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             // ADM-05 completely resolved (Do not fail the callback if reward has already been granted)
+            if (_rewardGranted)
+            {
+                _pendingRewardCallback = null;
+                _pendingFailureCallback = null;
+                return;
+            }
+            StartCoroutine(FailIfNoRewardArrives(adUnitId));
+        }
+
+        private System.Collections.IEnumerator FailIfNoRewardArrives(string adUnitId)
+        {
+            yield return new WaitForSecondsRealtime(0.5f);
             if (!_rewardGranted && _pendingRewardCallback != null)
             {
                 OnRewardedAdFailedToDisplay(adUnitId, "dismissed");
