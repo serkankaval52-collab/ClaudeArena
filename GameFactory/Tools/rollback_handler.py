@@ -3,6 +3,7 @@
 
 import argparse
 from datetime import datetime, timezone
+import shlex
 import subprocess
 import sys
 
@@ -114,7 +115,7 @@ def safe_rollback(dry_run=False):
             )
             return False
 
-        print(f"[Rollback System] Recovery stash commit: {stash_after} (stash@{{0}})")
+        print(f"[Rollback System] Recovery stash commit: {stash_after}")
         print(f"[Rollback System] Recovery branch: {recovery_branch} -> {stash_after}")
     else:
         print("[Rollback System] Working tree was clean; Git created no stash entry.")
@@ -131,10 +132,29 @@ def safe_rollback(dry_run=False):
 
     print(f"[Rollback System] Working tree restored to current HEAD commit {head_sha}.")
     if stash_created:
-        print(
-            "[Rollback System] Local changes remain recoverable from "
-            f"{recovery_branch} and stash@{{0}}."
+        repository_arg = shlex.quote(repository_path)
+        stash_arg = shlex.quote(stash_after)
+        branch_arg = shlex.quote(recovery_branch)
+        untracked_tree = run_git("ls-tree", "-r", "--name-only", f"{stash_after}^3")
+        has_untracked_snapshot = (
+            untracked_tree.returncode == 0 and bool(untracked_tree.stdout.strip())
         )
+
+        print(
+            "[Rollback System] The recovery branch keeps the stash commit reachable "
+            "if its refs/stash entry is later dropped."
+        )
+        print(
+            "[Rollback System] Checking out the recovery branch restores its tracked tree only; "
+            "it does NOT restore untracked files."
+        )
+        print("[Rollback System] Recover everything (tracked + untracked):")
+        print(f"  git -C {repository_arg} stash apply {stash_arg}")
+        if has_untracked_snapshot:
+            print("[Rollback System] Recover untracked files only:")
+            print(f"  git -C {repository_arg} checkout {branch_arg}^3 -- .")
+        else:
+            print("[Rollback System] This snapshot contains no untracked files.")
     else:
         print("[Rollback System] No local changes required a recovery snapshot.")
     return True
