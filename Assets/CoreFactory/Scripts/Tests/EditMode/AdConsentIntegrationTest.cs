@@ -86,7 +86,6 @@ namespace CoreFactory.Tests.EditMode
         [Test]
         public void TryShowInterstitial_ConsentDenied_WithNpaFallback_ReturnsTrue()
         {
-            // Default behaviour check (allowNonPersonalizedAdsWhenDenied is true by default)
             SetPrivateField("allowNonPersonalizedAdsWhenDenied", true);
             _adManager.DenyConsent();
             FastForwardSession(300f);
@@ -105,17 +104,20 @@ namespace CoreFactory.Tests.EditMode
         public void TryShowInterstitial_IsIndependentOfMachineLocale()
         {
             _adManager.GrantConsent();
-            FastForwardSession(300f);
 
             FieldInfo cooldownField = typeof(AdManager).GetField("_activeCooldown", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(cooldownField);
 
-            foreach (float cooldown in new[] { 60f, 120f })
-            {
-                cooldownField.SetValue(_adManager, cooldown);
-                FastForwardSession(300f);
-                Assert.IsTrue(_adManager.TryShowInterstitial("LocaleTest"));
-            }
+            // Cooldown at 120s -> at 75s elapsed, it must be blocked (returns false) (TST-01 non-tautology fix!)
+            cooldownField.SetValue(_adManager, 120f);
+            FastForwardSession(75f);
+            Assert.IsFalse(_adManager.TryShowInterstitial("LocaleTest"), "Ad was served before 120s cooldown completed.");
+
+            // Cooldown at 60s -> at 75s elapsed, it must serve (returns true) (TST-01 non-tautology fix!)
+            _adManager.Initialize(); // Reset timers
+            cooldownField.SetValue(_adManager, 60f);
+            FastForwardSession(75f);
+            Assert.IsTrue(_adManager.TryShowInterstitial("LocaleTest"), "NPA interstitial failed to serve after 60s cooldown.");
         }
 
         [Test]
@@ -189,7 +191,6 @@ namespace CoreFactory.Tests.EditMode
         [Test]
         public void RewardedAd_WithConsent_ButNoSdk_DoesNotGrantReward()
         {
-            // Verifies the #else compiler branches cleanly prevents free rewards (LEG-07 fix!)
             _adManager.GrantConsent();
             bool rewarded = false;
             bool failed = false;
