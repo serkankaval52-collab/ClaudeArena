@@ -67,7 +67,7 @@ namespace CoreFactory.Utils
                     _vibrator.Call("vibrate", (long)durationMs);
                 }
             }
-            catch (AndroidJavaException e)
+            catch (AndroidJavaException) // Fixed unused variable CS0168 warning completely!
             {
                 if (!_permissionWarningShown)
                 {

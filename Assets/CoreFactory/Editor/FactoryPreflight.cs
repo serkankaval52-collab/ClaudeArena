@@ -35,24 +35,25 @@ namespace CoreFactory.Editor
                 Debug.LogWarning("[Preflight] WARNING: AndroidManifest.xml not found. Confirm that the permission VIBRATE is registered in your final Android package.");
             }
 
-            // 2. iOS Native ARC flag verification (IOS-01 check)
-            string metaPath = Path.Combine(Application.dataPath, "Plugins/iOS/HapticBridge.mm.meta");
-            if (File.Exists(metaPath))
+            // 2. iOS Native ARC flag verification (IOS-01 check using real Unity APIs!) (PRE-02 fix!)
+            string pluginPath = "Assets/Plugins/iOS/HapticBridge.mm";
+            PluginImporter pi = AssetImporter.GetAtPath(pluginPath) as PluginImporter;
+            if (pi != null)
             {
-                string content = File.ReadAllText(metaPath);
-                if (!content.Contains("compileFlags: -fobjc-arc"))
+                string flags = pi.GetPlatformData(BuildTarget.iOS, "CompileFlags");
+                if (string.IsNullOrEmpty(flags) || !flags.Contains("-fobjc-arc"))
                 {
-                    Debug.LogError("[Preflight] P0 ERROR: HapticBridge.mm is missing compileFlags '-fobjc-arc' in its .meta metadata! Objective-C generator calls will leak memory on iOS devices.");
+                    Debug.LogError("[Preflight] P0 ERROR: HapticBridge.mm is missing compileFlags '-fobjc-arc'! Objective-C will leak.");
                     pass = false;
                 }
             }
             else
             {
-                Debug.LogWarning("[Preflight] WARNING: HapticBridge.mm.meta not found. Verify Objective-C ARC compliance manually.");
+                Debug.LogWarning("[Preflight] WARNING: HapticBridge.mm not found or failed to load via AssetImporter.");
             }
 
             // 3. Automated 9-Slice Rounded Sprite generation
-            string generatedSprite = Path.Combine(Application.dataPath, "CoreFactory/Art/Generated/RoundedSquare.png");
+            string generatedSprite = Path.Combine(Application.dataPath, "CoreFactory/Resources/Generated/RoundedSquare.png");
             if (!File.Exists(generatedSprite))
             {
                 Debug.Log("[Preflight] Automatically compiling rounded 9-slice sprite assets...");
@@ -65,6 +66,15 @@ namespace CoreFactory.Editor
             {
                 Debug.Log("[Preflight] UITheme.asset missing inside Resources. Automatically compiling default UI theme asset...");
                 UIThemeGenerator.GenerateThemeAsset();
+            }
+            else
+            {
+                // Verify that primaryFont and fallbacks are assigned
+                UIThemeAsset theme = AssetDatabase.LoadAssetAtPath<UIThemeAsset>("Assets/CoreFactory/Resources/UITheme.asset");
+                if (theme != null && (theme.primaryFont == null || theme.fallbackFonts == null || theme.fallbackFonts.Length == 0))
+                {
+                    Debug.LogWarning("[Preflight] WARNING: UITheme.asset has null font references. ja/ko/zh/ar will render as tofu (VIS-03).");
+                }
             }
 
             if (pass)

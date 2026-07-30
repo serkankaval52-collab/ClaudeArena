@@ -28,6 +28,7 @@ namespace CoreFactory.Monetization
 
         private System.Action _pendingRewardCallback;
         private System.Action<string> _pendingFailureCallback;
+        private bool _rewardGranted; // ADM-05 completely resolved (Defends against race conditions between hide and reward events)
 
         public ConsentStatus ConsentState => _consent;
         public bool CanServeAnyAd => _consent == ConsentStatus.Granted || (_consent == ConsentStatus.Denied && allowNonPersonalizedAdsWhenDenied);
@@ -226,6 +227,7 @@ namespace CoreFactory.Monetization
                 return;
             }
 
+            _rewardGranted = false; // Reset state before starting rewarded ad sequence (ADM-05 fix)
             _pendingRewardCallback = onRewardEarned;
             _pendingFailureCallback = onFailed;
 
@@ -244,6 +246,7 @@ namespace CoreFactory.Monetization
 #if APPLOVIN_MAX
         private void OnRewardedAdReceivedReward(string adUnitId, MaxSdkBase.Reward reward, MaxSdkBase.AdInfo adInfo)
         {
+            _rewardGranted = true; // Set state to true (ADM-05 fix!)
             var cb = _pendingRewardCallback;
             _pendingRewardCallback = null;
             _pendingFailureCallback = null;
@@ -257,10 +260,15 @@ namespace CoreFactory.Monetization
 
         private void OnRewardedAdHidden(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
-            // ADM-04 completely resolved (Clears the pending rewards when ad is closed without receiving reward)
-            if (_pendingRewardCallback != null)
+            // ADM-05 completely resolved (Do not fail the callback if reward has already been granted)
+            if (!_rewardGranted && _pendingRewardCallback != null)
             {
                 OnRewardedAdFailedToDisplay(adUnitId, "dismissed");
+            }
+            else
+            {
+                _pendingRewardCallback = null;
+                _pendingFailureCallback = null;
             }
         }
 #endif

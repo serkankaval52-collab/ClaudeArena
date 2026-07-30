@@ -46,6 +46,13 @@ namespace CoreFactory.UI
                 theme.buttonPressDuration = 0.08f;
                 theme.buttonPressScale = 0.96f;
 
+                // VIS-03 search and assign fallback if TMPro essential assets exist
+                var defaultFont = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>("Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
+                if (defaultFont != null)
+                {
+                    theme.primaryFont = defaultFont;
+                }
+
                 AssetDatabase.CreateAsset(theme, assetPath);
                 Debug.Log($"[UIThemeGenerator] Created new UITheme.asset at {assetPath}");
             }
