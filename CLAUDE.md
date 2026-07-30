@@ -10,4 +10,5 @@
 *   Maintain 100% loose coupling using `EventBus.Subscribe<T>()` and `EventBus.Publish<T>()`.
 *   No GC allocations inside loops. All components must be cached inside `Awake()`.
 *   Every game template MUST implement its meta-progression currencies, progressive level counts (>30), and localized main menu GDPR canvas.
-*   Ensure all new classes utilize URP 14/17 and avoid obsolete TMP API properties like `textWrappingMode`.
+*   Target Unity 2022.3 LTS with URP 14. This project is not Unity 6 / URP 17 compatible; do not use Unity 6-only APIs.
+*   TextMeshPro is pinned at 3.0.6. `enableWordWrapping` is the correct API in this version; `textWrappingMode` does not exist here and will not compile.

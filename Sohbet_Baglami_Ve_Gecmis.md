@@ -41,7 +41,7 @@ v3.3.0 sürümü itibariyle, yapay zekanın "teorik yeşil test logu" üretme il
     *   PRE-04/05/06 koruması için `UITheme.asset` ve `RoundedSquare.png` üretilen asset dosyaları Git'ten kaldırıldı (Seçenek a). Headless CI'da asset üretimi `Unity -batchmode -executeMethod` ile Unity Editor API'si üzerinden yapılmalıdır; Python ile serileştirilmiş Unity asset'i üretmek GUID uyuşmazlığı nedeniyle güvenli değildir.
 *   **VIS-13b / VIS-13c / VIS-03 (Rounded Corner & Tofu Characters):**
     *   `RoundedSpriteGenerator` asset'i Resources/Generated altına yazacak şekilde güncellendi, 9-slice border ayarları ve anti-aliasing transparan sızıntısını kapatan `alphaIsTransparency = true` bayrağı eklendi.
-    *   `UIThemeGenerator` ve dynamic fallback font atamaları ile tofu (□□□) sorunu kökten çözüldü.
+    *   `UIThemeGenerator` yalnızca `primaryFont` atar; `fallbackFonts` ATANMAMIŞTIR ve CJK/Arapça tofu (□□□) riski AÇIKTIR (VIS-03). WP-1 sonrası `FactoryPreflight` bu durumda build'i bilerek durdurur — konsoldaki "font references are empty" P0 hatası beklenen davranıştır, regresyon değildir. Sorun, izleyen font/lokalizasyon çalışma paketinde kapatılacaktır.
 
 ---
 
