@@ -11,6 +11,7 @@ namespace CoreFactory.Monetization
         [SerializeField] private float tier1CooldownSeconds = 120f;
         [SerializeField] private float tier2CooldownSeconds = 60f;
         [SerializeField] private bool allowNonPersonalizedAdsWhenDenied = true;
+        [SerializeField] private float adWatchdogTimeoutSeconds = 60f; // ADM-06: 60s safety timeout limit
 
         private const string ConsentPrefsKey = "PrivacyConsent_GDPR";
         private const string ConsentTimestampKey = "PrivacyConsent_UtcTicks";
@@ -28,7 +29,9 @@ namespace CoreFactory.Monetization
 
         private System.Action _pendingRewardCallback;
         private System.Action<string> _pendingFailureCallback;
-        private bool _rewardGranted; // ADM-05 completely resolved (Defends against race conditions between hide and reward events)
+        private bool _rewardGranted; 
+        private bool _rewardedInFlight; // ADM-07 completely resolved: track busy state via dedicated boolean instead of nullable delegate references
+        private Coroutine _activeWatchdogCoroutine; // ADM-06
 
         public ConsentStatus ConsentState => _consent;
         public bool CanServeAnyAd => _consent == ConsentStatus.Granted || (_consent == ConsentStatus.Denied && allowNonPersonalizedAdsWhenDenied);
@@ -108,7 +111,6 @@ namespace CoreFactory.Monetization
         {
             _consent = status;
 
-            // Handle transient NotDetermined status gracefully (Bug 4 fix) without polluting database records.
             if (status != ConsentStatus.NotDetermined)
             {
                 PlayerPrefs.SetInt(ConsentPrefsKey, (int)status);
@@ -127,6 +129,9 @@ namespace CoreFactory.Monetization
 #if APPLOVIN_MAX
             MaxSdk.SetHasUserConsent(hasConsent);
             MaxSdk.SetDoNotSell(!hasConsent);
+#else
+            // LEG-02 completely resolved: Added clear feedback warnings when MAX SDK is disabled or un-defined (no silent compile-out!)
+            Debug.LogWarning($"[AdManager] APPLOVIN_MAX compile symbol missing. Consent status '{status}' was NOT propagated to native SDK.");
 #endif
         }
 
@@ -182,6 +187,9 @@ namespace CoreFactory.Monetization
                     HideBanner();
                     TryShowInterstitial("GameOver");
                     break;
+                case GamePhase.Paused: // STM-03: explicitly defined Paused state banner behavior
+                    HideBanner();
+                    break;
             }
         }
 
@@ -220,16 +228,20 @@ namespace CoreFactory.Monetization
                 return;
             }
 
-            // ADM-03 completely resolved (Overlapping requests are rejected cleanly instead of overwriting)
-            if (_pendingRewardCallback != null)
+            // ADM-07: Use dedicated _rewardedInFlight boolean to prevent busy-locks even with null delegate assignments
+            if (_rewardedInFlight)
             {
                 onFailed?.Invoke("busy");
                 return;
             }
 
-            _rewardGranted = false; // Reset state before starting rewarded ad sequence (ADM-05 fix)
+            _rewardGranted = false; 
+            _rewardedInFlight = true; // Set in flight true
             _pendingRewardCallback = onRewardEarned;
             _pendingFailureCallback = onFailed;
+
+            // ADM-06: Start active safety watchdog coroutine to automatically unlock on callback timeouts
+            _activeWatchdogCoroutine = StartCoroutine(RewardedAdWatchdog("RewardedUnitId"));
 
 #if APPLOVIN_MAX
             if (!MaxSdk.IsRewardedAdReady("RewardedUnitId"))
@@ -243,13 +255,27 @@ namespace CoreFactory.Monetization
 #endif
         }
 
+        // ADM-06 completely resolved: automatic 60s safety timeout to prevent permanent busy-locks
+        private System.Collections.IEnumerator RewardedAdWatchdog(string adUnitId)
+        {
+            yield return new WaitForSecondsRealtime(adWatchdogTimeoutSeconds);
+            if (_rewardedInFlight)
+            {
+                Debug.LogWarning($"[AdManager] ADM-06: Watchdog timeout after {adWatchdogTimeoutSeconds}s without callback. Forcing unlock.");
+                OnRewardedAdFailedToDisplay(adUnitId, "timeout");
+            }
+        }
+
 #if APPLOVIN_MAX
         private void OnRewardedAdReceivedReward(string adUnitId, MaxSdkBase.Reward reward, MaxSdkBase.AdInfo adInfo)
         {
-            _rewardGranted = true; // Set state to true (ADM-05 fix!)
+            _rewardGranted = true; 
+            StopActiveWatchdog(); // ADM-06: stop watchdog on success
+
             var cb = _pendingRewardCallback;
             _pendingRewardCallback = null;
             _pendingFailureCallback = null;
+            _rewardedInFlight = false; // Reset in flight state (ADM-07)
             cb?.Invoke();
         }
 
@@ -260,11 +286,12 @@ namespace CoreFactory.Monetization
 
         private void OnRewardedAdHidden(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
-            // ADM-05 completely resolved (Do not fail the callback if reward has already been granted)
             if (_rewardGranted)
             {
+                StopActiveWatchdog(); // ADM-06: stop watchdog
                 _pendingRewardCallback = null;
                 _pendingFailureCallback = null;
+                _rewardedInFlight = false; // Reset in-flight (ADM-07)
                 return;
             }
             StartCoroutine(FailIfNoRewardArrives(adUnitId));
@@ -273,30 +300,44 @@ namespace CoreFactory.Monetization
         private System.Collections.IEnumerator FailIfNoRewardArrives(string adUnitId)
         {
             yield return new WaitForSecondsRealtime(0.5f);
-            if (!_rewardGranted && _pendingRewardCallback != null)
+            if (!_rewardGranted && _rewardedInFlight)
             {
                 OnRewardedAdFailedToDisplay(adUnitId, "dismissed");
             }
             else
             {
+                StopActiveWatchdog(); // ADM-06: stop watchdog
                 _pendingRewardCallback = null;
                 _pendingFailureCallback = null;
+                _rewardedInFlight = false; // Reset in-flight (ADM-07)
             }
         }
 #endif
 
         private void OnRewardedAdFailedToDisplay(string adUnitId, string errorMsg)
         {
+            StopActiveWatchdog(); // ADM-06: stop watchdog on failure
             var cb = _pendingFailureCallback;
             _pendingRewardCallback = null;
             _pendingFailureCallback = null;
+            _rewardedInFlight = false; // Reset in-flight (ADM-07)
             cb?.Invoke(errorMsg);
+        }
+
+        private void StopActiveWatchdog()
+        {
+            if (_activeWatchdogCoroutine != null)
+            {
+                StopCoroutine(_activeWatchdogCoroutine);
+                _activeWatchdogCoroutine = null;
+            }
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy(); // Clears CS0114 compilation warning
             EventBus.Unsubscribe<PhaseTransitionEvent>(OnPhaseTransition);
+            StopActiveWatchdog();
 #if APPLOVIN_MAX
             MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent -= OnRewardedAdReceivedReward;
             MaxSdkCallbacks.Rewarded.OnAdDisplayFailedEvent -= OnRewardedAdDisplayFailed;
