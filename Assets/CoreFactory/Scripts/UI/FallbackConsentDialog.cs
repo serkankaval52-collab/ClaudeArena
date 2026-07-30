@@ -99,8 +99,6 @@ namespace CoreFactory.UI
             tRect.sizeDelta = Vector2.zero;
 
             var tmpText = textObj.AddComponent<TextMeshProUGUI>();
-            
-            // LEG-05 & LEG-09 completely resolved: dynamic localization & non-coercive compliant wording
             tmpText.text = LocalizeOrFallback("consent_description", "We use device identifiers to personalize ads and measure performance. You can decline and still play with non-personalized ads.");
             tmpText.alignment = TextAlignmentOptions.Center;
 
@@ -157,6 +155,15 @@ namespace CoreFactory.UI
 
             var bg = btnObj.AddComponent<Image>();
             bg.color = new Color(0.15f, 0.15f, 0.15f, 1f);
+
+            // Bind the procedurally generated rounded 9-slice sprite asset cleanly! (VIS-13b fix!)
+            Sprite roundedSprite = Resources.Load<Sprite>("Generated/RoundedSquare");
+            if (roundedSprite != null)
+            {
+                bg.sprite = roundedSprite;
+                bg.type = Image.Type.Sliced;
+                Debug.Log("[FallbackConsentDialog] Successfully assigned 9-slice rounded square sprite on button Image component.");
+            }
 
             var btn = btnObj.AddComponent<Button>();
             btn.targetGraphic = bg;

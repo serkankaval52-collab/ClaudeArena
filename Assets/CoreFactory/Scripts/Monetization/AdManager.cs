@@ -218,6 +218,13 @@ namespace CoreFactory.Monetization
                 return;
             }
 
+            // ADM-03 completely resolved (Overlapping requests are rejected cleanly instead of overwriting)
+            if (_pendingRewardCallback != null)
+            {
+                onFailed?.Invoke("busy");
+                return;
+            }
+
             _pendingRewardCallback = onRewardEarned;
             _pendingFailureCallback = onFailed;
 
