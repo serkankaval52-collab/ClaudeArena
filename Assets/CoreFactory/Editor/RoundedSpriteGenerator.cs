@@ -63,6 +63,7 @@ namespace CoreFactory.Editor
                 importer.spriteBorder = new Vector4(radius, radius, radius, radius);
                 importer.filterMode = FilterMode.Bilinear;
                 importer.mipmapEnabled = false;
+                importer.alphaIsTransparency = true; // Enabled transparent alpha blending (VIS-13c fix!)
                 importer.SaveAndReimport();
             }
 

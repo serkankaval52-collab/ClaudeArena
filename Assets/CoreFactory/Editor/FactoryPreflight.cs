@@ -2,19 +2,37 @@
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 using CoreFactory.UI;
 
 namespace CoreFactory.Editor
 {
     [InitializeOnLoad]
-    public static class FactoryPreflight
+    public class FactoryPreflight : IPreprocessBuildWithReport
     {
+        public int callbackOrder => 0;
+
         static FactoryPreflight()
         {
             RunChecks();
         }
 
         [MenuItem("CoreFactory/Run Project Preflight Checks")]
+        public static void RunFromMenu()
+        {
+            RunChecks();
+        }
+
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            // PRE-01 completely resolved: Actually halt Unity build process by throwing BuildFailedException on non-compliant configurations!
+            if (!RunChecks())
+            {
+                throw new BuildFailedException("[Preflight] Build stopped due to non-compliant framework settings. Please resolve the P0 Errors listed above in the console log.");
+            }
+        }
+
         public static bool RunChecks()
         {
             bool pass = true;
