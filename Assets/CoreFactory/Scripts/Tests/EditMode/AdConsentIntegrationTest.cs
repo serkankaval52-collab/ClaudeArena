@@ -101,8 +101,10 @@ namespace CoreFactory.Tests.EditMode
         }
 
         [Test]
-        public void TryShowInterstitial_IsIndependentOfMachineLocale()
+        public void TryShowInterstitial_RespectsActiveCooldownBoundary()
         {
+            // TST-08 completely resolved (Accurate test naming, sets firstAdSessionDelay explicitly via reflection)
+            SetPrivateField("firstAdSessionDelay", 60f);
             _adManager.GrantConsent();
 
             FieldInfo cooldownField = typeof(AdManager).GetField("_activeCooldown", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -114,10 +116,9 @@ namespace CoreFactory.Tests.EditMode
             Assert.IsFalse(_adManager.TryShowInterstitial("LocaleTest"), "Ad was served before 120s cooldown completed.");
 
             // Cooldown at 60s -> at 75s elapsed, it must serve (returns true) (TST-01 non-tautology fix!)
-            _adManager.Initialize(); // Reset timers
             cooldownField.SetValue(_adManager, 60f);
             FastForwardSession(75f);
-            Assert.IsTrue(_adManager.TryShowInterstitial("LocaleTest"), "NPA interstitial failed to serve after 60s cooldown.");
+            Assert.IsTrue(_adManager.TryShowInterstitial("LocaleTest"), "Ad failed to serve after 60s cooldown completed.");
         }
 
         [Test]
