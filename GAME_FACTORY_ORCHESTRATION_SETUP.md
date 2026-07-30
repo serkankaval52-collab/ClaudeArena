@@ -7,73 +7,21 @@ This document outlines the official automation, CLI commands, and database struc
 
 ## SECTION 1: SYSTEM AUTOMATION SCRIPTS
 
-### 1.1 Automated Git Rollback Tool
+### 1.1 Guarded Git Worktree Restore Tool
 #### File: `GameFactory/Tools/rollback_handler.py`
-```python
-import sys
-import subprocess
-import time
 
-def safe_rollback():
-    """
-    Creates a defensive recovery backup stash before reverting Assets/CoreFactory to the stable state.
-    """
-    print("[Rollback System] Compiler error encountered. Initializing defensive restore checkpoint...")
-    stamp = time.strftime("%Y%m%d-%H%M%S")
-    try:
-        # Create a safe recovery branch to preserve potential uncommitted developer manual patches
-        subprocess.run(["git", "stash", "push", "-u", "-m", f"autorollback-{stamp}"], check=False)
-        subprocess.run(["git", "branch", f"recovery/rollback-{stamp}"], check=False)
-        
-        # Now execute the hard reset safely
-        subprocess.run(["git", "reset", "--hard", "HEAD"], check=True)
-        print(f"[Rollback System] Reverted Assets to the last stable Git state successfully. Recovery branch tag: recovery/rollback-{stamp}")
-        return True
-    except Exception as e:
-        print(f"[Rollback System] Critical: Failed to restore state: {e}", file=sys.stderr)
-        return False
+The source file is canonical and is intentionally not duplicated in this blueprint. Its safety contract is:
 
-if __name__ == "__main__":
-    safe_rollback()
-```
+* Validate the Git repository and resolve the current `HEAD` before any mutation.
+* Run and verify `git stash push -u` before reset. A stash failure must stop the operation.
+* When a stash is created, create `recovery/rollback-<timestamp>` at that exact stash commit and verify the ref before reset.
+* Restore the working tree only to the explicitly reported current `HEAD`; never claim that `HEAD` is a separately verified stable revision.
+* Preserve the stash entry and recovery branch so tracked and untracked files remain recoverable.
+* Support `--dry-run` without changing refs, the index, or the working tree.
 
-### 1.2 Syntactic Polish Verifier Tool
-#### File: `GameFactory/Tools/polish_verifier.py`
-```python
-import sys
-import os
+Visual, audio, and gameplay quality must be evaluated with explicit Unity EditMode/PlayMode checks and human review. Static keyword scans must not act as a production quality gate.
 
-REQUIRED_TERMS = ["ParticleSystem", "CameraShake", "AudioSource", "Coyote", "NearMiss"]
-
-def verify_polish(scripts_dir):
-    """
-    Parses and checks generated C# files for necessary premium polish declarations.
-    """
-    print(f"[Verifier] Parsing source directory: {scripts_dir}")
-    merged_source = ""
-    for root, _, files in os.walk(scripts_dir):
-        for file in files:
-            if file.endswith(".cs") and "Tests" not in root:
-                try:
-                    with open(os.path.join(root, file), "r", encoding="utf-8") as f:
-                        merged_source += f.read()
-                except Exception:
-                    pass
-
-    missing = [term for term in REQUIRED_TERMS if term not in merged_source]
-    if missing:
-        print(f"[Verifier] FAIL: Missing premium polish elements: {missing}", file=sys.stderr)
-        sys.exit(1)
-    else:
-        print("[Verifier] PASS: All required premium particles, sfx, and cameras are declared.")
-        sys.exit(0)
-
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        verify_polish(sys.argv[1])
-```
-
-### 1.3 Multi-Language Translator Tool
+### 1.2 Multi-Language Translator Tool
 #### File: `GameFactory/Tools/L10n_translator.py`
 ```python
 import sys
