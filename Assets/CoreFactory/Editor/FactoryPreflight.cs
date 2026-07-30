@@ -104,11 +104,17 @@ namespace CoreFactory.Editor
             }
             else
             {
-                // Verify that primaryFont and fallbacks are assigned
+                // Verify that the asset is loadable and all required font references are assigned.
                 UIThemeAsset theme = AssetDatabase.LoadAssetAtPath<UIThemeAsset>("Assets/CoreFactory/Resources/UITheme.asset");
-                if (theme != null && (theme.primaryFont == null || theme.fallbackFonts == null || theme.fallbackFonts.Length == 0))
+                if (theme == null)
                 {
-                    Debug.LogWarning("[Preflight] WARNING: UITheme.asset has null font references. ja/ko/zh/ar will render as tofu (VIS-03).");
+                    Debug.LogError("[Preflight] P0 ERROR: UITheme.asset exists but cannot be loaded as UIThemeAsset. Its m_Script GUID may be broken.");
+                    pass = false;
+                }
+                else if (theme.primaryFont == null || theme.fallbackFonts == null || theme.fallbackFonts.Length == 0)
+                {
+                    Debug.LogError("[Preflight] P0 ERROR: UITheme.asset font references are empty. ja/ko/zh/ar will render as tofu (□□□). Build stopped.");
+                    pass = false;
                 }
             }
 

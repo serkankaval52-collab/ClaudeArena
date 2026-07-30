@@ -1,4 +1,47 @@
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+.vs/
+.vscode/
+.idea/
+
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+sysinfo.txt
+
+*.apk
+*.aab
+*.unitypackage
+*.app
+crashlytics-build.properties
+.DS_Store
+
+# Bu depoya ozgu
 .ssh/
 test_clone/
 test.txt
 
+# Uretilen asset'ler makineye ozgu GUID tasir (bkz. commit 298ba38)
+/Assets/CoreFactory/Resources/UITheme.asset
+/Assets/CoreFactory/Resources/UITheme.asset.meta
+/Assets/CoreFactory/Resources/Generated/
+/Assets/CoreFactory/Resources/Generated.meta

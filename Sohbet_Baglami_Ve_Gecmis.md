@@ -38,7 +38,7 @@ v3.3.0 sürümü itibariyle, yapay zekanın "teorik yeşil test logu" üretme il
 *   **PRE-01 / PRE-03 / PRE-04 / PRE-05 / PRE-06 (Sert Kalkan Preflight):**
     *   `FactoryPreflight.cs` artık `IPreprocessBuildWithReport` kullanarak hata anında build'i gerçekten `BuildFailedException` ile kesmektedir.
     *   Kontroller platforma göre (Android için VIBRATE, iOS için ARC) dinamik olarak ayrıldı, böylece Android build'inin iOS bağımlılığıyla kırılması (PRE-03) önlendi.
-    *   PRE-04/05/06 koruması için `UITheme.asset` ve `RoundedSquare.png` manuel asset dosyaları Git'ten kaldırıldı (Seçenek a). Böylece Unity ilk açılışta yerel GUID ve `.meta` dosyalarını kendi otomatik üretecek; headless CI makinelerinde ise build öncesi kısa bir warm-up komutu çalıştırılarak derleme hatası vermesi önlenecektir.
+    *   PRE-04/05/06 koruması için `UITheme.asset` ve `RoundedSquare.png` üretilen asset dosyaları Git'ten kaldırıldı (Seçenek a). Headless CI'da asset üretimi `Unity -batchmode -executeMethod` ile Unity Editor API'si üzerinden yapılmalıdır; Python ile serileştirilmiş Unity asset'i üretmek GUID uyuşmazlığı nedeniyle güvenli değildir.
 *   **VIS-13b / VIS-13c / VIS-03 (Rounded Corner & Tofu Characters):**
     *   `RoundedSpriteGenerator` asset'i Resources/Generated altına yazacak şekilde güncellendi, 9-slice border ayarları ve anti-aliasing transparan sızıntısını kapatan `alphaIsTransparency = true` bayrağı eklendi.
     *   `UIThemeGenerator` ve dynamic fallback font atamaları ile tofu (□□□) sorunu kökten çözüldü.
