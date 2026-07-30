@@ -15,9 +15,12 @@ namespace CoreFactory.Editor
 
         static FactoryPreflight()
         {
-            // Automated asset compilation runs strictly during Editor idle state (PRE-04 fix!)
-            EditorApplication.delayCall += EnsureGeneratedAssets;
-            RunChecks(EditorUserBuildSettings.activeBuildTarget);
+            // PRE-06 completely resolved: Queue RunChecks inside delayCall right after EnsureGeneratedAssets (avoids false P0 alarms on first boot!)
+            EditorApplication.delayCall += () =>
+            {
+                EnsureGeneratedAssets();
+                RunChecks(EditorUserBuildSettings.activeBuildTarget);
+            };
         }
 
         [MenuItem("CoreFactory/Run Project Preflight Checks")]
