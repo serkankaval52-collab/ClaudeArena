@@ -156,13 +156,16 @@ namespace CoreFactory.UI
             var bg = btnObj.AddComponent<Image>();
             bg.color = new Color(0.15f, 0.15f, 0.15f, 1f);
 
-            // Bind the procedurally generated rounded 9-slice sprite asset cleanly! (VIS-13b fix!)
+            // Bind the procedurally generated rounded 9-slice sprite asset from Resources cleanly! (VIS-13b fix!)
             Sprite roundedSprite = Resources.Load<Sprite>("Generated/RoundedSquare");
             if (roundedSprite != null)
             {
                 bg.sprite = roundedSprite;
                 bg.type = Image.Type.Sliced;
-                Debug.Log("[FallbackConsentDialog] Successfully assigned 9-slice rounded square sprite on button Image component.");
+            }
+            else
+            {
+                Debug.LogWarning("[FallbackConsentDialog] RoundedSquare sprite not found in Resources. Falling back to plain rectangle.");
             }
 
             var btn = btnObj.AddComponent<Button>();

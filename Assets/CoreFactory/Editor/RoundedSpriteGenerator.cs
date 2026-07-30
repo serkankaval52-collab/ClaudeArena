@@ -11,7 +11,7 @@ namespace CoreFactory.Editor
         public static void GenerateRoundedSprite()
         {
             int size = 128;
-            int radius = 32;
+            int radius = 24; // Align radius exactly with theme token (cornerRadius = 24f) (VIS-13b fix!)
             Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
             Color[] colors = texture.GetPixels();
 
@@ -45,7 +45,8 @@ namespace CoreFactory.Editor
 
             texture.Apply();
 
-            string dir = Path.Combine(Application.dataPath, "CoreFactory/Art/Generated");
+            // Write into Resources/Generated to let Resources.Load<Sprite>() fetch it correctly (VIS-13b fix!)
+            string dir = Path.Combine(Application.dataPath, "CoreFactory/Resources/Generated");
             Directory.CreateDirectory(dir);
             string path = Path.Combine(dir, "RoundedSquare.png");
             File.WriteAllBytes(path, texture.EncodeToPNG());
@@ -53,7 +54,7 @@ namespace CoreFactory.Editor
 
             AssetDatabase.Refresh();
 
-            string relativePath = "Assets/CoreFactory/Art/Generated/RoundedSquare.png";
+            string relativePath = "Assets/CoreFactory/Resources/Generated/RoundedSquare.png";
             TextureImporter importer = AssetImporter.GetAtPath(relativePath) as TextureImporter;
             if (importer != null)
             {
@@ -65,7 +66,7 @@ namespace CoreFactory.Editor
                 importer.SaveAndReimport();
             }
 
-            Debug.Log($"[RoundedSpriteGenerator] Compiled RoundedSquare.png. Path: {relativePath}");
+            Debug.Log($"[RoundedSpriteGenerator] Compiled RoundedSquare.png inside Resources/Generated/ at {relativePath}");
         }
 
         private static bool IsInsideRoundedCorner(int x, int y, int size, int radius)

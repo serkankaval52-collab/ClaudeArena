@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: bbf7e58a230574843b0c8e2eb09467ec
+PluginImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  platformSettings:
+    Any:
+      enabled: 0
+      excludePlatforms: []
+    Editor:
+      enabled: 0
+      excludePlatforms: []
+    iPhone:
+      enabled: 1
+      excludePlatforms: []
+  compileFlags:
+    iPhone: -fobjc-arc

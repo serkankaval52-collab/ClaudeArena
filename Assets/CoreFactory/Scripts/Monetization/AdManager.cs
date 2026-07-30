@@ -55,6 +55,7 @@ namespace CoreFactory.Monetization
 #if APPLOVIN_MAX
             MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent += OnRewardedAdReceivedReward;
             MaxSdkCallbacks.Rewarded.OnAdDisplayFailedEvent += OnRewardedAdDisplayFailed;
+            MaxSdkCallbacks.Rewarded.OnAdHiddenEvent += OnRewardedAdHidden;
 #endif
         }
 
@@ -253,6 +254,15 @@ namespace CoreFactory.Monetization
         {
             OnRewardedAdFailedToDisplay(adUnitId, errorInfo.Message);
         }
+
+        private void OnRewardedAdHidden(string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            // ADM-04 completely resolved (Clears the pending rewards when ad is closed without receiving reward)
+            if (_pendingRewardCallback != null)
+            {
+                OnRewardedAdFailedToDisplay(adUnitId, "dismissed");
+            }
+        }
 #endif
 
         private void OnRewardedAdFailedToDisplay(string adUnitId, string errorMsg)
@@ -270,6 +280,7 @@ namespace CoreFactory.Monetization
 #if APPLOVIN_MAX
             MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent -= OnRewardedAdReceivedReward;
             MaxSdkCallbacks.Rewarded.OnAdDisplayFailedEvent -= OnRewardedAdDisplayFailed;
+            MaxSdkCallbacks.Rewarded.OnAdHiddenEvent -= OnRewardedAdHidden;
 #endif
         }
     }
