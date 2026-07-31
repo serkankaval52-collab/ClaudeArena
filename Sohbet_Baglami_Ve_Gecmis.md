@@ -42,6 +42,7 @@ v3.3.0 sürümü itibariyle, yapay zekanın "teorik yeşil test logu" üretme il
 *   **VIS-13b / VIS-13c / VIS-03 (Rounded Corner & Tofu Characters):**
     *   `RoundedSpriteGenerator` asset'i Resources/Generated altına yazacak şekilde güncellendi, 9-slice border ayarları ve anti-aliasing transparan sızıntısını kapatan `alphaIsTransparency = true` bayrağı eklendi.
     *   `UIThemeGenerator` yalnızca `primaryFont` atar; `fallbackFonts` ATANMAMIŞTIR ve CJK/Arapça tofu (□□□) riski AÇIKTIR (VIS-03). WP-1 sonrası `FactoryPreflight` bu durumda build'i bilerek durdurur — konsoldaki "font references are empty" P0 hatası beklenen davranıştır, regresyon değildir. Sorun, izleyen font/lokalizasyon çalışma paketinde kapatılacaktır.
+    *   **Lokalizasyon runtime'a BAĞLI DEĞİLDİR.** `LocalizeOrFallback` daima İngilizce fallback döndürür ve 10 adet `L10n_Table_*.json` dosyası `GameFactory/Factory_Data/checkpoints/` altında, yani `Assets/` dışında durduğu için Unity tarafından paketlenemez. WP-6 ile rıza metinlerindeki yönlendirici dil kaldırılmış, hangi verinin toplandığı ve reddedince ne olacağı metne eklenmiştir; İngilizce metin artık `FallbackConsentDialog` içindeki sabit dizeyle birebir aynıdır. Kanonik kaynak `GameFactory/Tools/L10n_translator.py` dosyasıdır ve JSON'lar ondan deterministik üretilir. Dosyaların taşınması ve Unity Localization'a bağlanması AÇIK maddedir. Rıza metni yayın öncesi dil ve hukuk incelemesi gerektirir; bu değişiklik uygunluk belgesi değildir.
 
 ---
 

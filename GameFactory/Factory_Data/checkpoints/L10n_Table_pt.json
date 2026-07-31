@@ -9,7 +9,7 @@
     "retry_button": "RECOMEÇAR",
     "game_over_label": "FIM DE JOGO",
     "quit_button": "SAIR",
-    "consent_description": "Cuidamos da sua privacidade. Por favor, autorize anúncios personalizados.",
+    "consent_description": "Usamos identificadores do dispositivo para personalizar anúncios e medir o desempenho. Você pode recusar e continuar jogando com anúncios não personalizados.",
     "consent_accept": "ACEITAR",
     "consent_decline": "RECUSAR"
 }

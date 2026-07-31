@@ -9,7 +9,7 @@
     "retry_button": "もう一度",
     "game_over_label": "ゲームオーバー",
     "quit_button": "終了",
-    "consent_description": "プライバシーを重視しています。パーソナライズ広告にご同意ください。",
+    "consent_description": "広告のパーソナライズと効果測定のために端末識別子を使用します。同意しない場合も、パーソナライズされていない広告でプレイを続けられます。",
     "consent_accept": "同意する",
     "consent_decline": "拒否する"
 }

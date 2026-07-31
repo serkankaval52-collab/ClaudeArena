@@ -45,16 +45,16 @@ L10N_DB = {
         "tr": "ÇIKIŞ", "ja": "終了", "ko": "종료", "zh": "退出", "ar": "خروج"
     },
     "consent_description": {
-        "en": "We care about your privacy. Please consent to personalized advertising.",
-        "es": "Nos importa tu privacidad. Por favor acepta la publicidad personalizada.",
-        "pt": "Cuidamos da sua privacidade. Por favor, autorize anúncios personalizados.",
-        "de": "Ihre Privatsphäre ist uns wichtig. Bitte stimmen Sie personalisierter Werbung zu.",
-        "fr": "Nous respectons votre vie privée. Veuillez accepter la publicité personnalisée.",
-        "tr": "Gizliliğinize önem veriyoruz. Lütfen kişiselleştirilmiş reklamları onaylayın.",
-        "ja": "プライバシーを重視しています。パーソナライズ広告にご同意ください。",
-        "ko": "개인정보를 소중히 여깁니다. 맞춤형 광고 표시를 동의해주세요.",
-        "zh": "我们重视您的隐私。请同意个性化广告以继续。",
-        "ar": "نحن نهتم بخصوصيتك. يرجى الموافقة على الإعلانات المخصصة."
+        "en": "We use device identifiers to personalize ads and measure performance. You can decline and still play with non-personalized ads.",
+        "es": "Usamos identificadores del dispositivo para personalizar los anuncios y medir el rendimiento. Puedes rechazarlo y seguir jugando con anuncios no personalizados.",
+        "pt": "Usamos identificadores do dispositivo para personalizar anúncios e medir o desempenho. Você pode recusar e continuar jogando com anúncios não personalizados.",
+        "de": "Wir verwenden Gerätekennungen, um Werbung zu personalisieren und die Leistung zu messen. Sie können ablehnen und mit nicht personalisierter Werbung weiterspielen.",
+        "fr": "Nous utilisons des identifiants d'appareil pour personnaliser les publicités et mesurer les performances. Vous pouvez refuser et continuer à jouer avec des publicités non personnalisées.",
+        "tr": "Reklamları kişiselleştirmek ve performansı ölçmek için cihaz tanımlayıcılarını kullanıyoruz. Reddedebilir ve kişiselleştirilmemiş reklamlarla oynamaya devam edebilirsiniz.",
+        "ja": "広告のパーソナライズと効果測定のために端末識別子を使用します。同意しない場合も、パーソナライズされていない広告でプレイを続けられます。",
+        "ko": "광고 맞춤설정과 성과 측정을 위해 기기 식별자를 사용합니다. 거부하셔도 맞춤설정되지 않은 광고와 함께 계속 플레이할 수 있습니다.",
+        "zh": "我们使用设备标识符来个性化广告并衡量效果。您可以拒绝，并继续使用非个性化广告进行游戏。",
+        "ar": "نستخدم معرّفات الجهاز لتخصيص الإعلانات وقياس الأداء. يمكنك الرفض ومتابعة اللعب مع إعلانات غير مخصّصة."
     },
     "consent_accept": {
         "en": "ACCEPT", "es": "ACEPTAR", "pt": "ACEITAR", "de": "AKZEPTIEREN", "fr": "ACCEPTER",

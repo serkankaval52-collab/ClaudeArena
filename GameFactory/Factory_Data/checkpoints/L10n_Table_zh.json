@@ -9,7 +9,7 @@
     "retry_button": "重试",
     "game_over_label": "游戏结束",
     "quit_button": "退出",
-    "consent_description": "我们重视您的隐私。请同意个性化广告以继续。",
+    "consent_description": "我们使用设备标识符来个性化广告并衡量效果。您可以拒绝，并继续使用非个性化广告进行游戏。",
     "consent_accept": "同意",
     "consent_decline": "拒绝"
 }
