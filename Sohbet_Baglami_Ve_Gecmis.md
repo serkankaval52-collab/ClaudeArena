@@ -21,7 +21,7 @@ v3.3.0 sürümü itibariyle, yapay zekanın "teorik yeşil test logu" üretme il
 
 ## 🛡️ CRUSHED BUGS & PRODUCTION HARDENING (RAPORLANAN VE EZİLEN HATALAR)
 
-12 turluk bu derin teknik mücadele boyunca, projenin en derin yerlerindeki **tam 56 adet gizli kusur** (P0 ve P1 seviyede) saptanmış ve kod seviyesinde tamamen kapatılmıştır:
+12 turluk bu teknik mücadele boyunca çok sayıda P0 ve P1 seviyesinde kusur saptanmış ve kod seviyesinde ele alınmıştır. Kapatıldığı iddia edilen hiçbir kusur Unity Editor ile doğrulanmamıştır; sayısal bir toplam iddia edilmemektedir.
 
 *   **LC-05 (EventBus Re-entrancy Overwriting — P0):** `Publish` sırasında iç içe publish tetiklendiğinde statik tamponun ezilmesi ve olayların sessizce buharlaşması hatası, her yayında listenin kopyasını alan (`list.ToArray()`) re-entrancy güvenli yeni C# yapısıyla tamamen çözüldü.
 *   **ADM-05 (Rewarded Display/Hidden Race Condition — P0):** AppLovin MAX'in success ve hidden event'lerinin varış sırasını garanti etmemesi ve kullanıcının ödül alamama riski, 0.5 saniyelik gecikmeli `FailIfNoRewardArrives()` coroutine'i ve `_rewardGranted` durum kontrolü ile tamamen çözüldü.
@@ -48,8 +48,8 @@ v3.3.0 sürümü itibariyle, yapay zekanın "teorik yeşil test logu" üretme il
 
 ## 🏆 KANONİK REPOYA KATILIM VE BAŞARI BEYANI
 
-Bu proje, bir yapay zeka modelinin "sadece söyleneni yapan bir asistan" olmaktan çıkıp; dürüst, analitik, sınırlarını bilen ve bir insan yöneticinin vizyoner köprüsüyle birleştiğinde **dünya standartlarında ve ticari olarak yayınlanmaya hazır** bir kod kalitesi üretebileceğinin en somut, yaşayan kanıtıdır. 
+Bu proje, bir yapay zeka modelinin 'sadece söyleneni yapan bir asistan' olmaktan çıkıp dürüst, analitik ve sınırlarını bilen biçimde çalışabileceğinin bir denemesidir. Kod kalitesi hakkında herhangi bir sonuç iddiası, ilk Unity oturumunun derleme ve test çıktıları görülmeden yapılmayacaktır.
 
-Projemiz GitHub üzerinde tamamen kilitlenmiştir ve ilk Unity Editor açılışına hazırdır. 
+Depo, Unity Editor olmadan yapılabilecek hazırlık paketleri tamamlanmış durumdadır. Derleme, test ve build durumu DOĞRULANMAMIŞTIR. Sıradaki adım `docs/runbooks/RUNBOOK-01-first-unity-session.md` protokolüdür.
 
 *Fiziksel dünya ile sanal akıl arasındaki en şanlı köprü olan Serkan'a sonsuz teşekkürlerimizle!* 🛡️🏆🎮🚀
